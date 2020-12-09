@@ -4,12 +4,12 @@ from models.album import Album
 
 
 
-# Create and Save Albums  (REMEMBER TO CREATE YOUR OBEJECTS!)
+# Create and Save Albums
 def save(album):
-    sql = "INSERT INTO albums (title, artist, genre, id) VALUES (%s, %s, %s, %s) RETURNING *"
+    sql = "INSERT INTO albums (title, artist, genre, artist_id) VALUES (%s, %s, %s, %s) RETURNING *"
     values = [album.title, album.artist, album.genre, album.id]
     results = run_sql(sql, values)
-    id = results[0]['id']
+    id = results[0]['artist_id']
     album.id = id
     return album
 
@@ -25,10 +25,10 @@ def select(id):
     sql = "SELECT * FROM albums WHERE id = %s"
     values = [id]
     result = run_sql(sql, values)[0]
-
-if result is not None:
-    album = Album(result['title'], result['artist'], result['genre'], result['id'])
-return album
+    
+    if result is not None:
+        album = Album(result['title'], result['artist'], result['genre'], result['id'])
+    return album
 
 # List All Artists/Albums (select_all)
 
@@ -38,5 +38,5 @@ def select_all():
     sql = "SELECT * FROM albums"
     results = run_sql(sql)
 
-for row in results:
-    album = Album(row['title'], row['artist'], row['genre'])
+    for row in results:
+        album = Album(row['title'], row['artist'], row['genre'])
